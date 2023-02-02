@@ -10,7 +10,7 @@
 
 #include <linux/ioctl.h>
 #include <linux/types.h>
-
+typedef int ion_user_handle_t;
 /**
  * enum ion_heap_types - list of all possible types of heaps
  * @ION_HEAP_TYPE_SYSTEM:	 memory allocated via vmalloc
