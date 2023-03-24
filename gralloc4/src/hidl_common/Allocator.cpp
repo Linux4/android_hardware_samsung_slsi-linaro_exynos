@@ -27,7 +27,7 @@
 #include "core/format_info.h"
 #include "allocator/mali_gralloc_ion.h"
 #include "allocator/mali_gralloc_shared_memory.h"
-#include "gralloc_priv.h"
+#include "../gralloc_priv.h"
 
 namespace arm
 {

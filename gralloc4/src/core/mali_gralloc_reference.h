@@ -19,7 +19,7 @@
 #ifndef MALI_GRALLOC_REFERENCE_H_
 #define MALI_GRALLOC_REFERENCE_H_
 
-#include "gralloc_priv.h"
+#include "../gralloc_priv.h"
 
 int mali_gralloc_reference_retain(buffer_handle_t handle);
 int mali_gralloc_reference_release(buffer_handle_t handle);

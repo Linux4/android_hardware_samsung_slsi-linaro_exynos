@@ -24,7 +24,7 @@
 #include <vector>
 #include <cutils/properties.h>
 
-#include "gralloc_priv.h"
+#include "../gralloc_priv.h"
 #include "mali_gralloc_bufferallocation.h"
 #include "mali_gralloc_usages.h"
 #include "format_info.h"

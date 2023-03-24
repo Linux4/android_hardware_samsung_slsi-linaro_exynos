@@ -19,7 +19,7 @@
 #ifndef MALI_GRALLOC_BUFFERACCESS_H_
 #define MALI_GRALLOC_BUFFERACCESS_H_
 
-#include "gralloc_priv.h"
+#include "../gralloc_priv.h"
 
 int mali_gralloc_lock(buffer_handle_t buffer, uint64_t usage, int l, int t, int w, int h,
                       void **vaddr);

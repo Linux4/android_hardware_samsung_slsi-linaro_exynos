@@ -8,7 +8,7 @@
 #include "core/mali_gralloc_reference.h"
 #include "allocator/mali_gralloc_ion.h"
 #include "hidl_common/SharedMetadata.h"
-#include "gralloc_priv.h"
+#include "../gralloc_priv.h"
 
 namespace android::hardware::graphics::allocator::priv {
 
