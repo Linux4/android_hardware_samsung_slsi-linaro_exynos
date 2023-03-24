@@ -64,12 +64,6 @@
 #endif
 #endif
 
-static const char kDmabufSensorDirectHeapName[] = "sensor_direct_heap";
-static const char kDmabufFaceauthTpuHeapName[] = "faceauth_tpu-secure";
-static const char kDmabufFaceauthImgHeapName[] = "faimg-secure";
-static const char kDmabufFaceauthRawImgHeapName[] = "farawimg-secure";
-static const char kDmabufFaceauthPrevHeapName[] = "faprev-secure";
-static const char kDmabufFaceauthModelHeapName[] = "famodel-secure";
 static const char kDmabufVframeSecureHeapName[] = "vframe-secure";
 static const char kDmabufVstreamSecureHeapName[] = "vstream-secure";
 
@@ -217,60 +211,8 @@ static void set_ion_flags(uint64_t usage, unsigned int *ion_flags)
 	}
 }
 
-static unsigned int select_faceauth_heap_mask(uint64_t usage)
-{
-	struct HeapSpecifier
-	{
-		uint64_t      usage_bits; // exact match required
-		unsigned int  mask;
-	};
-
-	static constexpr std::array<HeapSpecifier, 5> faceauth_heaps =
-	{{
-		{ // isp_image_heap
-			GRALLOC_USAGE_PROTECTED | GRALLOC_USAGE_HW_CAMERA_WRITE | GS101_GRALLOC_USAGE_TPU_INPUT,
-			EXYNOS_ION_HEAP_FA_IMG_MASK
-		},
-		{ // isp_internal_heap
-			GRALLOC_USAGE_PROTECTED | GRALLOC_USAGE_HW_CAMERA_WRITE | GRALLOC_USAGE_HW_CAMERA_READ,
-			EXYNOS_ION_HEAP_FA_RAWIMG_MASK
-		},
-		{ // isp_preview_heap
-			GRALLOC_USAGE_PROTECTED | GRALLOC_USAGE_HW_CAMERA_WRITE | GRALLOC_USAGE_HW_COMPOSER |
-            GRALLOC_USAGE_HW_TEXTURE,
-			EXYNOS_ION_HEAP_FA_PREV_MASK
-		},
-		{ // ml_model_heap
-			GRALLOC_USAGE_PROTECTED | GS101_GRALLOC_USAGE_TPU_INPUT,
-			EXYNOS_ION_HEAP_FA_MODEL_MASK
-		},
-		{ // tpu_heap
-			GRALLOC_USAGE_PROTECTED | GS101_GRALLOC_USAGE_TPU_OUTPUT | GS101_GRALLOC_USAGE_TPU_INPUT,
-			EXYNOS_ION_HEAP_FA_TPU_MASK
-		}
-	}};
-
-	for (const HeapSpecifier &heap : faceauth_heaps)
-	{
-		if (usage == heap.usage_bits)
-		{
-			ALOGV("Using FaceAuth heap mask 0x%x for usage 0x%" PRIx64 "\n",
-			      heap.mask, usage);
-			return heap.mask;
-		}
-	}
-
-	return 0;
-}
-
 static unsigned int select_heap_mask(uint64_t usage)
 {
-	if (unsigned int faceauth_heap_mask = select_faceauth_heap_mask(usage);
-	    faceauth_heap_mask != 0)
-	{
-		return faceauth_heap_mask;
-	}
-
 	unsigned int heap_mask;
 
 	if (usage & GRALLOC_USAGE_PROTECTED)
@@ -297,10 +239,6 @@ static unsigned int select_heap_mask(uint64_t usage)
 		heap_mask = EXYNOS_ION_HEAP_EXT_UI_MASK;
 	}
 #endif
-	else if (usage & GRALLOC_USAGE_SENSOR_DIRECT_DATA)
-	{
-		heap_mask = EXYNOS_ION_HEAP_SENSOR_DIRECT_MASK;
-	}
 	else
 	{
 		heap_mask = EXYNOS_ION_HEAP_SYSTEM_MASK;
@@ -322,18 +260,6 @@ static unsigned int select_heap_mask(uint64_t usage)
 static std::string select_dmabuf_heap(unsigned int heap_mask)
 {
 	switch (heap_mask) {
-		case EXYNOS_ION_HEAP_SENSOR_DIRECT_MASK:
-			return kDmabufSensorDirectHeapName;
-		case EXYNOS_ION_HEAP_FA_TPU_MASK:
-			return kDmabufFaceauthTpuHeapName;
-		case EXYNOS_ION_HEAP_FA_IMG_MASK:
-			return kDmabufFaceauthImgHeapName;
-		case EXYNOS_ION_HEAP_FA_RAWIMG_MASK:
-			return kDmabufFaceauthRawImgHeapName;
-		case EXYNOS_ION_HEAP_FA_PREV_MASK:
-			return kDmabufFaceauthPrevHeapName;
-		case EXYNOS_ION_HEAP_FA_MODEL_MASK:
-			return kDmabufFaceauthModelHeapName;
 		case EXYNOS_ION_HEAP_VIDEO_FRAME_MASK:
 			return kDmabufVframeSecureHeapName;
 		case EXYNOS_ION_HEAP_VIDEO_STREAM_MASK:
