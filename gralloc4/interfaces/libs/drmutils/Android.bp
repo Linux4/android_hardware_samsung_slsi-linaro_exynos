@@ -40,7 +40,7 @@ cc_library_static {
     ],
     include_dirs: [
         ".",
-        "hardware/google/gchips/include",
+        "hardware/samsung_slsi-linaro/exynos/include",
     ],
     export_include_dirs: [
         ".",

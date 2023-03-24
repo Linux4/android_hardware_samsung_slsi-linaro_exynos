@@ -62,10 +62,7 @@ arm_gralloc_core_cc_defaults {
 		"format_info.cpp",
 	],
 	include_dirs: [
-		"hardware/google/gchips/include",
-	],
-	header_libs: [
-		"device_kernel_headers",
+		"hardware/samsung_slsi-linaro/exynos/include",
 	],
 	static_libs: [
 		"libarect",

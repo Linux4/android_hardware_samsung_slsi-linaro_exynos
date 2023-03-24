@@ -17,8 +17,8 @@
 
 soong_namespace {
 	imports: [
-		"hardware/google/graphics/common",
-		"hardware/google/gchips",
+		"hardware/samsung_slsi-linaro/graphics/base",
+		"hardware/samsung_slsi-linaro/exynos",
 	]
 }
 

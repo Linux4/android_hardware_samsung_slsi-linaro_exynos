@@ -65,17 +65,13 @@ cc_library_shared {
 		"libhidlbase",
 		"libhidltransport",
 		"libnativewindow",
-		"libion_google",
+		"libion_exynos",
 		"android.hardware.graphics.common@1.2",
 		"android.hardware.graphics.common-V3-ndk",
 		"android.hardware.graphics.mapper@4.0",
 		"libdmabufheap",
 		"libgralloctypes",
 		"libdrm",
-	],
-	header_libs: [
-		"google_hal_headers",
-		"device_kernel_headers",
 	],
 	export_include_dirs: ["libGralloc4Wrapper/include"]
 }

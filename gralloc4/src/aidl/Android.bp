@@ -24,7 +24,7 @@ cc_library_shared {
         ":libgralloc_hidl_common_shared_metadata",
     ],
     include_dirs: [
-        "hardware/google/gchips/include",
+        "hardware/samsung_slsi-linaro/exynos/include",
     ],
 }
 
