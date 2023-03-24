@@ -33,7 +33,7 @@ static constexpr Error kTransactionError = Error::NO_RESOURCES;
 
 Mapper::Mapper()
 {
-    mMapper = IMapper::getService();
+    mMapper = V4_0::IMapper::getService();
     if (mMapper == nullptr || mMapper->isRemote()) {
         LOG_ALWAYS_FATAL("gralloc-mapper must be in passthrough mode");
     }
@@ -44,15 +44,15 @@ Error Mapper::createDescriptor(
         BufferDescriptor* outDescriptor) const
 {
     Error error;
-    auto ret = mMapper->createDescriptor(descriptorInfo,
+    auto ret = mMapper->createDescriptor(*(V4_0::IMapper::BufferDescriptorInfo*)(char*)&descriptorInfo,
             [&](const auto& tmpError, const auto& tmpDescriptor)
             {
-                error = tmpError;
+                error = *(Error*)(char*)&tmpError;
                 if (error != Error::NONE) {
                     return;
                 }
 
-                *outDescriptor = tmpDescriptor;
+                *outDescriptor = *(BufferDescriptor*)(char*)&tmpDescriptor;
             });
 
     return (ret.isOk()) ? error : kTransactionError;
@@ -65,7 +65,7 @@ Error Mapper::importBuffer(const hardware::hidl_handle& rawHandle,
     auto ret = mMapper->importBuffer(rawHandle,
             [&](const auto& tmpError, const auto& tmpBuffer)
             {
-                error = tmpError;
+                error = *(Error*)(char*)&tmpError;
                 if (error != Error::NONE) {
                     return;
                 }
@@ -81,7 +81,7 @@ void Mapper::freeBuffer(buffer_handle_t bufferHandle) const
     auto buffer = const_cast<native_handle_t*>(bufferHandle);
     auto ret = mMapper->freeBuffer(buffer);
 
-    auto error = (ret.isOk()) ? static_cast<Error>(ret) : kTransactionError;
+    auto error = (ret.isOk()) ? *(Error*)(char*)&ret : kTransactionError;
     ALOGE_IF(error != Error::NONE, "freeBuffer(%p) failed with %d",
             buffer, error);
 }
@@ -102,10 +102,10 @@ Error Mapper::lock(buffer_handle_t bufferHandle, uint64_t usage,
     }
 
     Error error;
-    auto ret = mMapper->lock(buffer, usage, accessRegion, acquireFenceHandle,
+    auto ret = mMapper->lock(buffer, usage, *(V4_0::IMapper::Rect*)(char*)&accessRegion, acquireFenceHandle,
             [&](const auto& tmpError, const auto& tmpData)
             {
-                error = tmpError;
+                error = *(Error*)(char*)&tmpError;
                 if (error != Error::NONE) {
                     return;
                 }
@@ -137,16 +137,16 @@ Error Mapper::lock(buffer_handle_t bufferHandle, uint64_t usage,
     }
 
     Error error;
-    auto ret = mMapper->lockYCbCr(buffer, usage, accessRegion,
+    auto ret = mMapper->lock(buffer, usage, *(V4_0::IMapper::Rect*)(char*)&accessRegion,
             acquireFenceHandle,
             [&](const auto& tmpError, const auto& tmpLayout)
             {
-                error = tmpError;
+                error = *(Error*)(char*)&tmpError;
                 if (error != Error::NONE) {
                     return;
                 }
 
-                *outLayout = tmpLayout;
+                *outLayout = *(YCbCrLayout*)(char*)&tmpLayout;
             });
 
     // we own acquireFence even on errors
@@ -166,7 +166,7 @@ int Mapper::unlock(buffer_handle_t bufferHandle) const
     auto ret = mMapper->unlock(buffer,
             [&](const auto& tmpError, const auto& tmpReleaseFence)
             {
-                error = tmpError;
+                error = *(Error*)(char*)&tmpError;
                 if (error != Error::NONE) {
                     return;
                 }

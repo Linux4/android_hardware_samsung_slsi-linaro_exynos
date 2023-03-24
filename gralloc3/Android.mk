@@ -61,7 +61,7 @@ endif
 include $(CLEAR_VARS)
 
 LOCAL_SHARED_LIBRARIES := liblog libcutils libutils android.hardware.graphics.allocator@2.0 android.hardware.graphics.mapper@2.0 \
-	libsync libhardware libhidlbase
+	android.hardware.graphics.mapper@4.0 libsync libhardware libhidlbase
 
 LOCAL_C_INCLUDES := \
     $(TOP)/hardware/samsung_slsi-linaro/exynos/include

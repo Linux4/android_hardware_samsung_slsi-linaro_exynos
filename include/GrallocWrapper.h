@@ -21,6 +21,7 @@
 
 #include <android/hardware/graphics/allocator/2.0/IAllocator.h>
 #include <android/hardware/graphics/mapper/2.0/IMapper.h>
+#include <android/hardware/graphics/mapper/4.0/IMapper.h>
 #include <utils/StrongPointer.h>
 
 namespace android {
@@ -34,6 +35,8 @@ using hardware::graphics::mapper::V2_0::BufferDescriptor;
 using hardware::graphics::mapper::V2_0::Error;
 using hardware::graphics::mapper::V2_0::IMapper;
 using hardware::graphics::mapper::V2_0::YCbCrLayout;
+
+namespace V4_0 = hardware::graphics::mapper::V4_0;
 
 // A wrapper to IMapper
 class Mapper {
@@ -70,7 +73,7 @@ public:
     int unlock(buffer_handle_t bufferHandle) const;
 
 private:
-    sp<IMapper> mMapper;
+    sp<V4_0::IMapper> mMapper;
 };
 
 // A wrapper to IAllocator
