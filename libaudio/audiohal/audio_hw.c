@@ -547,8 +547,6 @@ device_type get_device_id(struct audio_device *adev, audio_devices_t devices)
                 case AUDIO_DEVICE_OUT_BLUETOOTH_SCO:
                 case AUDIO_DEVICE_OUT_BLUETOOTH_SCO_HEADSET:
                 case AUDIO_DEVICE_OUT_BLUETOOTH_SCO_CARKIT:
-                case AUDIO_DEVICE_OUT_BLUETOOTH_SCO_HEADSET|AUDIO_DEVICE_OUT_SPEAKER:
-                    ret = DEVICE_BT_HEADSET;
                     break;
                 case AUDIO_DEVICE_OUT_USB_DEVICE:
                     ret = DEVICE_USB_HEADSET;
