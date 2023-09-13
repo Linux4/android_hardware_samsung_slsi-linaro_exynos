@@ -1,4 +1,5 @@
 # Copyright (C) 2014 The Android Open Source Project
+# Copyright (C) 2023 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,50 +14,28 @@
 # limitations under the License.
 
 #
-# Primary Audio HAL
+# Audio RIL Interface for SEC
 #
 ifeq ($(BOARD_USE_AUDIOHAL), true)
+ifneq ($(BOARD_USE_SITRIL), true)
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := \
-	audio_hw.c \
-	factory_manager.c
-
-ifeq ($(BOARD_USE_SITRIL), true)
-LOCAL_SRC_FILES += \
-    voice_manager_sit.c
-
-LOCAL_C_INCLUDES += \
-    $(TOP)/hardware/samsung_slsi-linaro/exynos/libaudio/audioril-sit \
-    $(TOP)/hardware/samsung_slsi-linaro/exynos/libaudio/audioril-sit/include
-
-LOCAL_CFLAGS += -DUSE_SITRIL
-else
-LOCAL_SRC_FILES += \
-    voice_manager_sec.c
-
-LOCAL_C_INCLUDES += \
-    $(TOP)/hardware/samsung_slsi-linaro/exynos/libaudio/audioril-sec \
-    $(TOP)/hardware/samsung_slsi-linaro/exynos/libaudio/audioril-sec/include
-endif
+LOCAL_SRC_FILES := secril_interface.c
 
 LOCAL_C_INCLUDES += \
 	$(TOP)/hardware/samsung_slsi-linaro/exynos/include/libaudio/audiohal
 
+LOCAL_C_INCLUDES += ./include
+
 LOCAL_HEADER_LIBRARIES := libhardware_headers
-LOCAL_SHARED_LIBRARIES := liblog libcutils libprocessgroup libaudioproxy
-LOCAL_SHARED_LIBRARIES += libaudio-ril
+LOCAL_SHARED_LIBRARIES := liblog libcutils libutils libc
 
-ifeq ($(BOARD_USE_SOUNDTRIGGER_HAL),true)
-LOCAL_CFLAGS += -DSUPPORT_STHAL_INTERFACE
-endif
-
-LOCAL_MODULE := audio.primary.$(TARGET_SOC)
+LOCAL_MODULE := libaudio-ril
 LOCAL_PROPRIETARY_MODULE := true
-LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
+endif
 endif

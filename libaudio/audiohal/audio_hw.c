@@ -3243,6 +3243,7 @@ static int adev_set_voice_volume(struct audio_hw_device *dev, float volume)
         primary_output->common.requested_devices = primary_output->rollback_devices;
         adev_set_route((void *)primary_output, AUSAGE_PLAYBACK, ROUTE, NON_FORCE_ROUTE);
     }
+#if USE_SITRIL
     else if(isAPCallMode(adev))
     {
         int apvolume = 0;
@@ -3252,6 +3253,7 @@ static int adev_set_voice_volume(struct audio_hw_device *dev, float volume)
         if (adev->proxy)
             proxy_set_communication_volume(adev->proxy,apvolume);
     }
+#endif
     adev->voice_volume = volume;
     ALOGD("device-%s: set volume to (%f)", __func__, volume);
     pthread_mutex_unlock(&adev->lock);
